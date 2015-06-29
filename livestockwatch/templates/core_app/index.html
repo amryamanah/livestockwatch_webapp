@@ -1,0 +1,42 @@
+
+{% extends 'base.html' %}
+{% load nvd3_tags %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <h1>Analysis Material</h1>
+      <div class="well center-block">
+        <a href="{% url "ca_place_index" %}" type="button" class="btn btn-primary btn-lg btn-block">
+          Place
+        </a>
+        <a href="{% url "ca_stall_index" %}" type="button" class="btn btn-primary btn-lg btn-block">
+          Stall
+        </a>
+        <a href="{% url "ca_cattle_index" %}" type="button" class="btn btn-primary btn-lg btn-block">
+          Cattle
+        </a>
+        <a href="{% url "ca_neckband_index" %}" type="button" class="btn btn-primary btn-lg btn-block">
+          Neckband Pattern
+        </a>
+        <a href="{% url "ia_capture_session_index" %}" type="button" class="btn btn-primary btn-lg btn-block">
+          Capture Session
+        </a>
+      </div>
+      <h1>Analysis Session</h1>
+      <div class="well center-block">
+        <a href="{% url "ia_analysis_session_index" %}" type="button" class="btn btn-primary btn-lg btn-block">
+          Analysis Session
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}

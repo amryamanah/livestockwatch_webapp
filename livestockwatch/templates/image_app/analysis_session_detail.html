@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content%}
+
+  <!-- Upload form. Note enctype attribute! -->
+  <h1>Analysis Session</h1>
+
+  <p>Name: {{ analysis_session.name }}</p>
+
+
+  {% if ia_parameters %}
+
+    <a type="button" href="{% url "ia_pupil_analysis_runner" analysis_session.id %}"
+    class="btn btn-info">Run Pupil Analysis</a>
+
+    <h3>Analysis Parameter</h3>
+    <table class="table table-hover">
+    {% for parameter in ia_parameters %}
+      <tr>
+        <td>{{ parameter.capture_session }}</td>
+        <td>{{ parameter.parameter }}</td>
+        <td>
+          <a type="button" class="btn btn-info"
+             href="{% url "ia_analysis_result_detail" analysis_session.id parameter.id %}">Result</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </table>
+  {% else %}
+    <p>No analysis parameter</p>
+  {% endif %}
+
+  <h3>Add New Analysis Parameter</h3>
+  <form action="{% url "ia_analysis_session_detail" analysis_session.id %}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form ia_parameter_form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "star" %} Submit
+        </button>
+    {% endbuttons %}
+  </form>
+
+  <h1>Add or Remove text boxes with jQuery</h1>
+  <input type='button' value='Remove Button' id='removeButton'>
+  <input type='button' value='Get TextBox Value' id='getButtonValue'>
+
+  <form class="form-inline">
+    <div id='ParameterGroup'>
+      <div id="KeyValueDiv1">
+
+        <div class="form-group">
+          <label class="sr-only" for="pkey1">Email address</label>
+          <input type="text" class="form-control" id="pkey1" placeholder="Parameter Key">
+        </div>
+
+        <div class="form-group">
+          <label class="sr-only" for="pvalue1">Password</label>
+          <input type="text" class="form-control" id="pvalue1" placeholder="Parameter Value">
+        </div>
+
+      </div>
+    </div>
+    <input type='button' class="btn btn-sm btn-info" value='Add parameter' id='addButton'>
+    <button type="submit" class="btn btn-default">Sign in</button>
+  </form>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  var counter = 2;
+  $("#addButton").click(function () {
+    if(counter > 10){
+      alert("Only 10 textboxes allow");
+      return false;
+    }
+
+    var newTextBoxDiv = $(document.createElement('div'))
+         .attr("id", 'KeyValueDiv' + counter);
+
+    newTextBoxDiv.after().html(
+      '<div class="form-group">'+
+        '<label class="sr-only" for="pkey'+ counter +'">Email address</label>'+
+        '<input type="text" class="form-control" id="pkey'+ counter +'" placeholder="Parameter Key">'+
+      '</div>'+
+      '<div class="form-group">'+
+        '<label class="sr-only" for="pvalue'+ counter +'">Password</label>'+
+        '<input type="text" class="form-control" id="pvalue'+ counter +'" placeholder="Parameter Value">'+
+      '</div>'
+    );
+
+    newTextBoxDiv.appendTo("#ParameterGroup");
+    counter++;
+  });
+
+  $("#removeButton").click(function () {
+    if(counter==1){
+      alert("No more textbox to remove");
+      return false;
+    }
+    counter--;
+    $("#KeyValueDiv" + counter).remove();
+  });
+
+  $("#getButtonValue").click(function () {
+    var msg = '';
+    for(i=1; i<counter; i++){
+      msg += $('#pkey' + i).val() + ': ' + $('#pvalue' + i).val();
+    }
+    alert(msg);
+  });
+
+});
+</script>
+{% endblock %}

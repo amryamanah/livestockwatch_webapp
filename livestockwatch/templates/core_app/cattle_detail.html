@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <h1>Cattle Details</h1>
+  <p>Cattle id: {{ cattle.id_number }}</p>
+  <p>Cattle examination number: {{ cattle.examination_number }}</p>
+  <p><a href="{% url "ca_place_detail" cattle.stall.place.id %}">Place: {{ cattle.stall.place.name }}</a></p>
+  <p><a href="{% url "ca_stall_detail" cattle.stall.id %}">Stall: {{ cattle.stall.name }}</a></p>
+  <p>Father: {{ cattle.regist_num_father }}</p>
+  <p>Mother: {{ cattle.regist_num_mother }}</p>
+  <p>Sex: {{ cattle.get_sex_display }}</p>
+  <p>Birthday: {{ cattle.birthday }}</p>
+  <p>Fat Start Date: {{ cattle.fat_start_date }}</p>
+  <p>Fat Finish Date: {{ cattle.fat_finish_date }}</p>
+  <a type="button" href="{% url "ia_capture_session_index" %}?cattle_id={{ cattle.id }}"
+    class="btn btn-info">Capture Session</a>
+
+  <h3>Cattle Neckband List</h3>
+
+  {% if cattle_neckband_patterns %}
+    <table class="table table-hover">
+    {% for cattle_neckband in cattle_neckband_patterns %}
+      <tr>
+        <td><a href="{% url "ca_cattle_detail" cattle.id %}">{{ cattle_neckband.neckband_pattern.pattern }}</a></td>
+        <td>{{ cattle_neckband.is_active }}</td>
+        <td>{{ cattle_neckband.start_date }}</td>
+        <td>{{ cattle_neckband.end_date }}</td>
+      </tr>
+    {% endfor %}
+    </table>
+  {% endif %}
+
+  <h3>Add Cattle Neckband</h3>
+
+  <form action="{% url "ca_cattle_detail" cattle.id %}" method="post" class="form">
+      {% csrf_token %}
+      {% bootstrap_form neckband_form %}
+      {% buttons %}
+          <button type="submit" class="btn btn-primary">
+              {% bootstrap_icon "star" %} Submit
+          </button>
+      {% endbuttons %}
+  </form>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <h1>Add Cattle</h1>
+
+  {% if stall %}
+    <form action="{% url "ca_cattle_add" %}?next={{ url_next }}&stall_id={{ stall.id }}"
+        method="post" class="form">
+  {% else %}
+    <form action="{% url "ca_cattle_add" %}?next={{ url_next }}"
+        method="post" class="form">
+  {% endif %}
+      {% csrf_token %}
+      {% bootstrap_form_errors cattle_form %}
+      {% bootstrap_form cattle_form %}
+      {% buttons %}
+          <button type="submit" class="btn btn-primary">
+              {% bootstrap_icon "star" %} Submit
+          </button>
+      {% endbuttons %}
+  </form>
+
+{% endblock %}

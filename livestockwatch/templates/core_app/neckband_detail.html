@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <h1>{{ neckband.pattern }}</h1>
+
+  <p>{{ neckband.is_active }}</p>
+
+  <h3>
+    Cattle List
+  </h3>
+
+  {% if lst_cattle_neckband %}
+    <table class="table table-hover">
+    {% for cattle_neckband in lst_cattle_neckband %}
+      <tr><td><a href="{% url "ca_cattle_detail" cattle_neckband.cattle.id %}">{{ cattle_neckband.cattle.id_number }}</a></td></tr>
+    {% endfor %}
+    </table>
+  {% else %}
+    No cattle exists.
+  {% endif %}
+
+
+{% endblock %}

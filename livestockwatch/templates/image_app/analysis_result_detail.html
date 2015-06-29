@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content%}
+
+  <!-- Upload form. Note enctype attribute! -->
+  <h1>Analysis Result</h1>
+
+  <p>Analysis session: {{ analysis_session.name }}</p>
+  <p>Capture session name: {{ analysis_parameter.capture_session.name }}</p>
+  <p>Cattle Session: <a href="{% url "ca_cattle_detail" analysis_parameter.capture_session.cattle.id %}">
+    {{ analysis_parameter.capture_session.cattle.id_number }}</a>
+  </p>
+
+  <table class="table table-hover">
+    <tr>
+      <th>Time taken</th>
+      <th>Pupil area</th>
+      <th>Pupil eccentricity</th>
+      <th>Pupil constriction amplitude</th>
+      <th>Pupil initial pupil roundness</th>
+    </tr>
+  {% for result in lst_result %}
+
+    <tr>
+      <td>
+        {{ result.time_taken }}
+      </td>
+      <td>
+        {{ result.pupil_area }}
+      </td>
+      <td>
+        {{ result.pupil_eccentricity }}
+      </td>
+      <td>
+        {{ result.pupil_ca }}
+      </td>
+      <td>
+        {{ result.pupil_ipr }}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+
+{% endblock %}

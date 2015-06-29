@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <h1>Add Capture Sesssion</h1>
+
+  {% if cattle %}
+    <form action="{% url "ia_capture_session_add" %}?cattle_id={{ cattle.id }}&next={{ url_next }}"
+        method="post" class="form" enctype="multipart/form-data">
+  {% else %}
+    <form action="{% url "ia_capture_session_add" %}?next={{ url_next }}"
+        method="post" class="form" enctype="multipart/form-data">
+  {% endif %}
+      {% csrf_token %}
+      {% bootstrap_form capture_session_form %}
+      {% buttons %}
+          <button type="submit" class="btn btn-primary">
+              {% bootstrap_icon "star" %} Submit
+          </button>
+      {% endbuttons %}
+  </form>
+
+{% endblock %}

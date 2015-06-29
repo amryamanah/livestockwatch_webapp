@@ -1,0 +1,28 @@
+
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <h1>
+    Place
+    <span>
+      <a type="button" class="btn btn-primary"
+         href="{% url "ca_place_add" %}?next={{ cur_path }}"> Add new place</a>
+    </span>
+  </h1>
+
+  {% if places %}
+    <table class="table table-hover">
+    {% for place in places %}
+      <tr><td><a href="{% url "ca_place_detail" place.id %}">{{ place.name }}</a></td></tr>
+    {% endfor %}
+    </table>
+  {% else %}
+    No place exists.
+  {% endif %}
+
+
+{% endblock %}

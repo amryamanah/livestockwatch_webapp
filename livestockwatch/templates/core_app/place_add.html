@@ -1,0 +1,23 @@
+
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <h1>Add Place</h1>
+
+  <form action="{% url "ca_place_add" %}?next={{ url_next }}"
+        method="post" class="form">
+      {% csrf_token %}
+      {% bootstrap_form_errors place_form layout='inline' %}
+      {% bootstrap_form place_form %}
+      {% buttons %}
+          <button type="submit" class="btn btn-primary">
+              {% bootstrap_icon "star" %} Submit
+          </button>
+      {% endbuttons %}
+  </form>
+
+{% endblock %}

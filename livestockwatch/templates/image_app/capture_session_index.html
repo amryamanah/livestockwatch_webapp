@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content%}
+
+  <!-- Upload form. Note enctype attribute! -->
+  <h1>
+    Capture Session :
+  {% if cattle %}
+    <a href="{% url "ca_cattle_detail" cattle.id %}">{{ cattle.id_number }}</a>
+  {% endif %}
+  </h1>
+
+
+  <h1>
+    Capture Session
+    <span>
+      {% if cattle %}
+      <a type="button" class="btn btn-primary"
+         href="{% url "ia_capture_session_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+        Add new capture_session</a>
+      {% else %}
+      <a type="button" class="btn btn-primary"
+         href="{% url "ia_capture_session_add" %}?next={{ cur_path }}">
+        Add new capture_session</a>
+      {% endif %}
+    </span>
+  </h1>
+
+  {% if capture_sessions %}
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Cattle number</th>
+          <th>Period</th>
+          <th>Time taken</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for cs in capture_sessions %}
+        <tr>
+          <td>
+            <a href="{% url "ia_capture_session_details" cs.id %}">{{ cs.name }}</a>
+          </td>
+          <td>
+            <a href="{% url "ca_cattle_detail" cs.cattle.id %}">{{ cs.cattle.id_number }}</a>
+          </td>
+          <td>
+            {{ cs.period }}
+          </td>
+          <td>
+            {{ cs.time_taken }}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No capture session</p>
+  {% endif %}
+
+
+  <h1>Add or Remove text boxes with jQuery</h1>
+  <div id='TextBoxesGroup'>
+    <div id="TextBoxDiv1">
+      <label>Textbox #1 : </label><input type='textbox' id='textbox1' >
+    </div>
+  </div>
+  <input type='button' value='Add Button' id='addButton'>
+  <input type='button' value='Remove Button' id='removeButton'>
+  <input type='button' value='Get TextBox Value' id='getButtonValue'>
+
+  <form class="form-inline">
+    <div>
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputEmail3">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputPassword3">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword3" placeholder="Password">
+      </div>
+      <input type='button' class="btn btn-info" value='Add Button' id='addButton'>
+    </div>
+    <button type="submit" class="btn btn-default">Sign in</button>
+  </form>
+<script type="text/javascript">
+
+$(document).ready(function(){
+  var counter = 2;
+  $("#addButton").click(function () {
+    if(counter > 10){
+      alert("Only 10 textboxes allow");
+      return false;
+    }
+
+    var newTextBoxDiv = $(document.createElement('div'))
+         .attr("id", 'TextBoxDiv' + counter);
+
+    newTextBoxDiv.after().html(
+      '<label>Textbox #'+ counter + ' : </label>' +
+          '<input type="text" name="textbox' + counter +
+          '" id="textbox' + counter + '" value="" >'
+    );
+    newTextBoxDiv.appendTo("#TextBoxesGroup");
+    counter++;
+  });
+
+  $("#removeButton").click(function () {
+    if(counter==1){
+      alert("No more textbox to remove");
+      return false;
+    }
+    counter--;
+    $("#TextBoxDiv" + counter).remove();
+  });
+
+  $("#getButtonValue").click(function () {
+    var msg = '';
+    for(i=1; i<counter; i++){
+      msg += "\n Textbox #" + i + " : " + $('#textbox' + i).val();
+    }
+    alert(msg);
+  });
+
+});
+</script>
+{% endblock %}

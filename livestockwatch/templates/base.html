@@ -4,7 +4,6 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% load staticfiles %}
-{% load nvd3_tags %}
 <html{% if request.LANGUAGE_CODE %} lang="{{ request.LANGUAGE_CODE }}"{% endif %}>
 
 <head>
@@ -26,7 +25,7 @@
 <body>
   {% block navbar %}
     <div class="navbar navbar-inverse" role="navigation">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle"
                   data-toggle="collapse" data-target=".navbar-collapse">
@@ -44,7 +43,7 @@
       </div>
     </div>
   {% endblock %}
-  <div class="container">
+  <div class="container-fluid">
         {% bootstrap_messages %}
         {% block content %}{% endblock %}
   </div>

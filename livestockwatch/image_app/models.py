@@ -126,6 +126,16 @@ class ImageAnalysisParameter(ModelTimestamp):
     class Meta:
         unique_together = ["analysis_session", "capture_session"]
 
+class AnalysisCaptureSessionResult(ModelTimestamp):
+    analysis_session = models.ForeignKey(ImageAnalysisSession)
+    analysis_parameter = models.ForeignKey(ImageAnalysisParameter)
+
+    pupil_max_area = models.FloatField(_("IAR pupil max area"), null=True)
+
+    class Meta:
+        unique_together = ["analysis_session", "analysis_parameter"]
+
+
 class ImageAnalysisResult(ModelTimestamp):
     NO_PUPIL_DETECTED = 0
     IMPARTIAL_PUPIL_DETECTED = 1
@@ -161,7 +171,6 @@ class ImageAnalysisResult(ModelTimestamp):
     pupil_ipr = models.FloatField(_("IAR initial pupil roundness"), null=True)
 
     # capture_session data
-    pupil_max_area = models.FloatField(_("IAR pupil max area"), null=True)
     pupil_normalized_area = models.FloatField(_("IAR pupil normalized area"), null=True)
     time_taken = models.DateTimeField(_("IAR time taken"), null=True)
 

@@ -4,14 +4,17 @@ from django.conf import settings
 from django.forms.models import modelform_factory
 
 from datetime import datetime
+import time
 import cv2
 import os
+import random
 
 from core_app.models import Cattle
 
 from .pupil_analysis import detect_pupil, NoPupilDetected, \
     ImpartialPupilDetected, EllipseAnalysis, ellipse_calculate_ca, ellipse_normalized_area, save_pupil_analysis_result
-from .models import RawImage, CaptureSession, ImageAnalysisSession, ImageAnalysisParameter, ImageAnalysisResult
+from .models import RawImage, CaptureSession, ImageAnalysisSession, \
+    ImageAnalysisParameter, ImageAnalysisResult, AnalysisCaptureSessionResult
 from .forms import RawImageUploadForm, ImageAnalysisSessionForm, \
     ImageAnalysisParameterForm, RawImageUploadFormWithCattle
 
@@ -134,7 +137,7 @@ def analysis_session_index(request):
         form = ImageAnalysisSessionForm()
 
     context = {
-        "analysis_sessions":analysis_sessions,
+        "analysis_sessions": analysis_sessions,
         "form": form
     }
     return render_to_response("image_app/analysis_session_index.html", context,
@@ -145,6 +148,7 @@ def analysis_session_detail(request, analysis_session_id):
     analysis_session = get_object_or_404(ImageAnalysisSession, pk=analysis_session_id)
     ia_parameters = analysis_session.imageanalysisparameter_set.all()
     ia_parameter_form = ImageAnalysisParameterForm()
+    lst_analysis_cs_result = analysis_session.analysiscapturesessionresult_set.all()
 
     if request.method == "POST":
         ia_parameter_form = ImageAnalysisParameterForm(request.POST)
@@ -154,10 +158,87 @@ def analysis_session_detail(request, analysis_session_id):
             analysis_parameter.save()
             return redirect("ia_analysis_session_detail", analysis_session_id=analysis_session_id)
 
+    xdata = ["nightime image", "daytime image"]
+    ydata = [ia_parameters.filter(capture_session__period=CaptureSession.NIGHT_IMAGE).count(),
+             ia_parameters.filter(capture_session__period=CaptureSession.DAY_IMAGE).count()]
+
+    color_list = ['#5d8aa8', '#e32636']
+
+    extra_serie = {
+        "tooltip": {"y_start": "", "y_end": " Capture Session"},
+        "color_list": color_list
+    }
+    chartdata = {'x': xdata, 'y1': ydata, 'extra1': extra_serie}
+    charttype = "pieChart"
+    chartcontainer = 'piechart_container'  # container name
+
+    piechart_data = {
+        'charttype': charttype,
+        'chartdata': chartdata,
+        'chartcontainer': chartcontainer,
+        'extra': {
+            'x_is_date': False,
+            'x_axis_format': '',
+            'tag_script_js': True,
+            'jquery_on_ready': False,
+        }
+    }
+
+    xdata = []
+    for analysis_cs_result in lst_analysis_cs_result.all():
+        raw_time = analysis_cs_result.analysis_parameter.capture_session.time_taken.timetuple()
+        xdata.append(int(time.mktime(raw_time) * 1000))
+
+    daytime_max_area = []
+    nighttime_max_area = []
+
+    cur_dt = None
+    cur_nt = None
+    for analysis_cs_result in lst_analysis_cs_result:
+        if analysis_cs_result.analysis_parameter.capture_session.period == CaptureSession.DAY_IMAGE:
+            if cur_nt is None:
+                cur_nt = 0
+            cur_dt = analysis_cs_result.pupil_max_area
+            daytime_max_area.append(int(cur_dt))
+            nighttime_max_area.append(0)
+        else:
+            if cur_dt is None:
+                cur_dt = 0
+            cur_nt = analysis_cs_result.pupil_max_area
+            nighttime_max_area.append(int(cur_nt))
+            daytime_max_area.append(0)
+
+    tooltip_date = "%d %b %Y %H:%M:%S %p"
+    extra_serie1 = {
+        "tooltip": {"y_start": "max area ", "y_end": " in pixel"},
+        "date_format": tooltip_date
+    }
+    chartdata = {'x': xdata,
+                 'name1': 'Pupil daytime max area', 'y1': daytime_max_area, 'extra1': extra_serie1,
+                 'name2': 'Pupil nighttime max area', 'y2': nighttime_max_area, 'extra2': extra_serie1}
+
+    charttype = "multiBarChart"
+    chartcontainer = 'multibarchart_container'  # container name
+
+    linechart_data = {
+        'charttype': charttype,
+        'chartdata': chartdata,
+        'chartcontainer': chartcontainer,
+        'extra': {
+            'x_is_date': True,
+            'x_axis_format': '%d %b %Y %H',
+            'tag_script_js': True,
+            'jquery_on_ready': True,
+        }
+    }
+
     context = {
+        "linechart_data": linechart_data,
+        "piechart_data": piechart_data,
         "ia_parameter_form": ia_parameter_form,
         "analysis_session": analysis_session,
-        "ia_parameters": ia_parameters
+        "ia_parameters": ia_parameters,
+        "lst_analysis_cs_result": lst_analysis_cs_result
     }
 
     return render_to_response("image_app/analysis_session_detail.html", context,
@@ -166,6 +247,10 @@ def analysis_session_detail(request, analysis_session_id):
 def update_analysis_result(analysis_session_id, analysis_param_id):
     analysis_session = ImageAnalysisSession.objects.get(pk=analysis_session_id)
     analysis_param = ImageAnalysisParameter.objects.get(pk=analysis_param_id)
+    analysis_cs_result, created = AnalysisCaptureSessionResult.objects.get_or_create(
+        analysis_session=analysis_session,
+        analysis_parameter=analysis_param
+    )
 
     lst_nopl_img = analysis_param.capture_session.rawimage_set.filter(
         image_type=RawImage.NON_POLARIZED_FILTER
@@ -183,13 +268,15 @@ def update_analysis_result(analysis_session_id, analysis_param_id):
             if analysis_result.pupil_area is not None and max_area < analysis_result.pupil_area:
                 max_area = analysis_result.pupil_area
 
+    analysis_cs_result.pupil_max_area = max_area
+    analysis_cs_result.save()
+
     for nopl in lst_nopl_img:
         analysis_result = ImageAnalysisResult.objects.get(
             analysis_session=analysis_session,
             raw_image=nopl
         )
         if analysis_result.pupil_area is not None:
-            analysis_result.pupil_max_area = max_area
             analysis_result.pupil_normalized_area = ellipse_normalized_area(analysis_result.pupil_area, max_area)
             analysis_result.pupil_ca = ellipse_calculate_ca(analysis_result.pupil_area, max_area)
             analysis_result.save()

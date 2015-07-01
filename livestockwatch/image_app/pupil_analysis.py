@@ -27,12 +27,12 @@ def create_mask(RGB, parameter):
     # Convert RGB image to chosen color space
     hsv_img = color.rgb2hsv(RGB)
 
-    print("hue_max : {}".format(parameter.hue_max))
-    print("hue_min : {}".format(parameter.hue_min))
-    print("sat_max : {}".format(parameter.sat_max))
-    print("sat_min : {}".format(parameter.sat_min))
-    print("val_max : {}".format(parameter.val_max))
-    print("val_min : {}".format(parameter.val_min))
+    # print("hue_max : {}".format(parameter.hue_max))
+    # print("hue_min : {}".format(parameter.hue_min))
+    # print("sat_max : {}".format(parameter.sat_max))
+    # print("sat_min : {}".format(parameter.sat_min))
+    # print("val_max : {}".format(parameter.val_max))
+    # print("val_min : {}".format(parameter.val_min))
     hue_min = parameter.hue_min
     hue_max = parameter.hue_max
     sat_min = parameter.sat_min

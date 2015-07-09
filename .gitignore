@@ -67,3 +67,4 @@ livestockwatch/media/*
 
 livestockwatch/assets/*
 extracted_data
+livestockwatch/livestockwatch/settings/production.py

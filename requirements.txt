@@ -1,0 +1,9 @@
+django
+django-filter
+markdown
+psycopg2
+djangorestframework
+django-multiupload
+django-bootstrap3
+django-nvd3
+django-bower

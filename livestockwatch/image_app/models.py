@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.postgres.fields import HStoreField
 
 from utils.model_util import ModelTimestamp
-
+from cattle_app.models import Cattle
 
 class CaptureSession(ModelTimestamp):
     NIGHT_IMAGE = 'nt'
@@ -16,7 +16,7 @@ class CaptureSession(ModelTimestamp):
         (DAY_IMAGE, 'Day time image'),
         (NIGHT_IMAGE, 'Night time image'),
     )
-    cattle = models.ForeignKey("core_app.Cattle")
+    cattle = models.ForeignKey(Cattle)
     name = models.CharField(_("CS Name"), max_length=100, null=True)
     period = models.CharField(_("Day period"), max_length=2, choices=PERIOD_TYPE)
     folder_path = models.CharField(_("CS folder path"), max_length=300, null=True)

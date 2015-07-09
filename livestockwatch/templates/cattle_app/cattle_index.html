@@ -1,0 +1,48 @@
+
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h1>Cattle <span>
+        <a type="button" class="btn btn-primary"
+           href="{% url "ca_cattle_add" %}?next={{ cur_path }}">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </a>
+      </span>
+      </h1>
+
+      {% if lst_cattle %}
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>ID Number</th>
+              <th>Place</th>
+              <th>Stall</th>
+              <th>Number of capture session</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cattle in lst_cattle %}
+            <tr>
+              <td>{{ cattle.id_number }}</td>
+              <td>{{ cattle.stall.place.name }}</td>
+              <td>{{ cattle.stall.name }}</td>
+              <td>{{ cattle.capturesession_set.count }}</td>
+              <td><a role="button" class="btn btn-sm btn-info"
+                     href="{% url "ca_cattle_detail" cattle.id %}">Details</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No cattle</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

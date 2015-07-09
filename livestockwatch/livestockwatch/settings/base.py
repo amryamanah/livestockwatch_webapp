@@ -215,11 +215,16 @@ THIRD_PARTY_APPS = (
     "djangobower",
     'django_nvd3',
     "bootstrap3",
+    "rest_framework",
 )
 # Apps specific for this project go here.
 LOCAL_APPS = (
     "core_app",
+    "farm_app",
+    "cattle_app",
     "image_app",
+    "device_app",
+    "api_app",
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

@@ -1,0 +1,45 @@
+
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h1>Device
+{#        <span>#}
+{#          <a type="button" class="btn btn-primary"#}
+{#             href="{% url "da_cattle_add" %}?next={{ cur_path }}">#}
+{#            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>#}
+{#          </a>#}
+{#        </span>#}
+      </h1>
+
+      {% if lst_device %}
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Stall</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for device in lst_device %}
+            <tr>
+              <td>{{ device.name }}</td>
+              <td>{{ device.stall.name }}</td>
+              <td><a role="button" class="btn btn-sm btn-info"
+                     href="{% url "da_device_detail" device.id %}">Details</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No device</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

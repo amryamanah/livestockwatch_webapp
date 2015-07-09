@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h1>Add Stall</h1>
+
+      {% if place %}
+        <form action="{% url "fa_stall_add" %}?next={{ url_next }}&place_id={{ place.id }}"
+            method="post" class="form">
+      {% else %}
+        <form action="{% url "fa_stall_add" %}?next={{ url_next }}"
+            method="post" class="form">
+      {% endif %}
+          {% csrf_token %}
+          {% bootstrap_form stall_form %}
+          {% buttons %}
+              <button type="submit" class="btn btn-primary">
+                  {% bootstrap_icon "star" %} Submit
+              </button>
+          {% endbuttons %}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

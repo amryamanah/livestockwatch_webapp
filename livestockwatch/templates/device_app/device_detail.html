@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load tz %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-11 col-md-offset-1">
+      <div class="row">
+        <h1>Device Details</h1>
+        <div class="col-md-3">
+          <h3>Basic information</h3>
+          <table class="table table-bordered">
+            <tr>
+              <td>Name</td>
+              <td>{{ device.name }}</td>
+            </tr>
+            <tr>
+              <td>Place</td>
+              <td><a href="{% url "fa_place_detail" device.stall.place.id %}">{{ device.stall.place.name }}</a></td>
+            </tr>
+            <tr>
+              <td>Stall</td>
+              <td>
+                <a href="{% url "fa_stall_detail" device.stall.id %}">{{ device.stall.name }}</a>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+{#        <div class="col-md-4">#}
+{#          <a type="button" href="{% url "ia_capture_session_index" %}?cattle_id={{ cattle.id }}"#}
+{#             class="btn btn-info">Capture Session</a>#}
+{#        </div>#}
+
+        <div class="col-md-3 col-md-offset-5">
+          <div class="well">
+
+            <a type="button" class="btn btn-primary btn-lg btn-block"
+               href="{% url "da_log_add" %}?next={{ cur_path }}&device_id={{ device.id }}">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              Device log
+            </a>
+
+            <a type="button" class="btn btn-primary btn-lg btn-block"
+               href="{% url "da_error_add" %}?next={{ cur_path }}&device_id={{ device.id }}">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              Device error
+            </a>
+
+            <a type="button" class="btn btn-primary btn-lg btn-block"
+               href="{% url "da_condition_add" %}?next={{ cur_path }}&device_id={{ device.id }}">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              Device condition
+            </a>
+
+          </div>
+        </div>
+
+        <div class="col-md-3"></div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-11">
+
+          <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+            <ul id="myTabs" class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#devicelog" id="devicelog-tab" role="tab" data-toggle="tab"
+                   aria-controls="devicelog" aria-expanded="true">Device Log</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#deviceerror" id="deviceerror-tab" role="tab" data-toggle="tab"
+                   aria-controls="deviceerror" aria-expanded="true">Device Error</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#devicecondition" role="tab" id="devicecondition-tab" data-toggle="tab"
+                   aria-controls="devicecondition" aria-expanded="false">Device Condition</a>
+              </li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+              <div role="tabpanel" class="tab-pane fade in active" id="devicelog" aria-labelledby="devicelog-tab">
+                <h3>Device Log</h3>
+                {% if lst_device_log %}
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Time taken</th>
+                        <th>Name</th>
+                        <th>Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for dl in lst_device_log %}
+                      <tr>
+                        <td>{{ dl.time_taken|localtime }}</td>
+                        <td>{{ dl.name }}</td>
+                        <td>{{ dl.remarks }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                  <p> No device log available</p>
+                {% endif %}
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="deviceerror" aria-labelledby="deviceerror-tab">
+                <h3>Device Error</h3>
+                {% if lst_device_error %}
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Time taken</th>
+                        <th>Severity</th>
+                        <th>Component</th>
+                        <th>Status</th>
+                        <th>Message</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for de in lst_device_error %}
+                      <tr>
+                        <td>{{ de.time_taken|localtime }}</td>
+                        <td>{{ de.get_severity_display }}</td>
+                        <td>{{ de.get_component_display }}</td>
+                        <td>{{ de.get_status_display }}</td>
+                        <td>{{ de.message }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                  <p> No device error available</p>
+                {% endif %}
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="devicecondition" aria-labelledby="devicecondition-tab">
+                <h3>Device Condition</h3>
+                {% if lst_device_condition %}
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Time taken</th>
+                        <th>Cpu usage</th>
+                        <th>Disk usage</th>
+                        <th>Memory usage</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for dc in lst_device_condition %}
+                      <tr>
+                        <td>{{ dc.time_taken|localtime }}</td>
+                        <td>{{ dc.cpu_usage }}</td>
+                        <td>{{ dc.disk_usage }}</td>
+                        <td>{{ dc.memory_usage }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                  <p> No device condition available</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+{% endblock %}

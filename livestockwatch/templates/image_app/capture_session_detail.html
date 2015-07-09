@@ -5,62 +5,64 @@
 {% block bootstrap3_title %} LiveStockWatch {% endblock %}
 
 {% block content%}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h1>Capture Session</h1>
 
-  <!-- Upload form. Note enctype attribute! -->
-  <h1>Capture Session</h1>
+      <p>Name: {{ capture_session.name }}</p>
+      <p>Date Time Taken: {{ capture_session.datetime_taken }}</p>
+      <p>Folder Path: {{ capture_session.folder_path }}</p>
 
-  <p>Name: {{ capture_session.name }}</p>
-  <p>Date Time Taken: {{ capture_session.datetime_taken }}</p>
-  <p>Folder Path: {{ capture_session.folder_path }}</p>
+      <h3>Image</h3>
 
-  <h3>Image</h3>
+      <h2>Non Polarized Filter</h2>
 
-  <h2>Non Polarized Filter</h2>
+      {% if nopl_img %}
+        <table class="table table-hover">
+        {% for img in nopl_img %}
+          <tr>
+            <td>
+              <a href="{{ img.image_file.url }}">{{ img.name }}</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </table>
+      {% else %}
+        <p>No nopl_img</p>
+      {% endif %}
 
-  {% if nopl_img %}
-    <table class="table table-hover">
-    {% for img in nopl_img %}
-      <tr>
-        <td>
-          <a href="{{ img.image_file.url }}">{{ img.name }}</a>
-        </td>
-      </tr>
-    {% endfor %}
-    </table>
-  {% else %}
-    <p>No nopl_img</p>
-  {% endif %}
+      <h2>Polarized Filter</h2>
 
-  <h2>Polarized Filter</h2>
+      {% if pl_img %}
+        <table class="table table-hover">
+        {% for img in pl_img %}
+          <tr>
+            <td>
+              <a href="{{ img.image_file.url }}">{{ img.name }}</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </table>
+      {% else %}
+        <p>No nopl_img</p>
+      {% endif %}
 
-  {% if pl_img %}
-    <table class="table table-hover">
-    {% for img in pl_img %}
-      <tr>
-        <td>
-          <a href="{{ img.image_file.url }}">{{ img.name }}</a>
-        </td>
-      </tr>
-    {% endfor %}
-    </table>
-  {% else %}
-    <p>No nopl_img</p>
-  {% endif %}
+      <h2>Identification</h2>
 
-  <h2>Identification</h2>
-
-  {% if id_img %}
-    <table class="table table-hover">
-    {% for img in id_img %}
-      <tr>
-        <td>
-          <a href="{{ img.image_file.url }}">{{ img.name }}</a>
-        </td>
-      </tr>
-    {% endfor %}
-    </table>
-  {% else %}
-    <p>No nopl_img</p>
-  {% endif %}
+      {% if id_img %}
+        <table class="table table-hover">
+        {% for img in id_img %}
+          <tr>
+            <td>
+              <a href="{{ img.image_file.url }}">{{ img.name }}</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </table>
+      {% else %}
+        <p>No nopl_img</p>
+      {% endif %}
+    </div>
+  </div>
 
 {% endblock %}

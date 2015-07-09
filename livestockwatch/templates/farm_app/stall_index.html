@@ -1,0 +1,45 @@
+
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h1>Stall <span>
+        <a type="button" class="btn btn-primary"
+           href="{% url "fa_stall_add" %}?next={{ cur_path }}">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </a>
+      </span>
+      </h1>
+
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Place</th>
+            <th>Head Count</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stall in stalls %}
+            <tr>
+              <td>{{ stall.name }}</td>
+              <td>{{ stall.place.name }}</td>
+              <td>{{ stall.head_count }}</td>
+              <td>
+                <a type="button" class="btn btn-info btn-sm"
+                  href="{% url "fa_stall_detail" stall.id %}">Stall detail</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+{% endblock %}

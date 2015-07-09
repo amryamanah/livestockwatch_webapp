@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h1>Add body data 2</h1>
+
+      <form action="{% url "ca_bodydata2_add" %}?next={{ url_next }}&cattle_id={{ cattle.id }}"
+            method="post" class="form">
+          {% csrf_token %}
+          {% bootstrap_form_errors form %}
+          {% bootstrap_form form %}
+          {% buttons %}
+              <button type="submit" class="btn btn-primary">
+                  {% bootstrap_icon "star" %} Submit
+              </button>
+          {% endbuttons %}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

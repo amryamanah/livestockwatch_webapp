@@ -23,7 +23,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'livestockwatch-dev',
+        'NAME': 'livestockwatch-develop',
         'USER': 'django',
         'PASSWORD': 'django',
         'HOST': 'localhost',

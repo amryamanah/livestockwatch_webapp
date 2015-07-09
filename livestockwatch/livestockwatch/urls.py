@@ -20,7 +20,11 @@ from django.conf.urls.static import static
 
 urlpatterns = patterns('',
         (r'^', include('core_app.urls')),
+        (r'^fa/', include('farm_app.urls')),
+        (r'^ca/', include('cattle_app.urls')),
         (r'^ia/', include('image_app.urls')),
+        (r'^da/', include('device_app.urls')),
+        (r'^api/', include('api_app.urls')),
         (r'^admin/', include(admin.site.urls)),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

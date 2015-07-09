@@ -9,7 +9,7 @@ import cv2
 import os
 import random
 
-from core_app.models import Cattle
+from cattle_app.models import Cattle
 
 from .pupil_analysis import detect_pupil, NoPupilDetected, \
     ImpartialPupilDetected, EllipseAnalysis, ellipse_calculate_ca, ellipse_normalized_area, save_pupil_analysis_result
@@ -20,18 +20,12 @@ from .forms import RawImageUploadForm, ImageAnalysisSessionForm, \
 
 def capture_session_index(request):
     cur_path = request.get_full_path()
-    cattle = None
 
-    if "cattle_id" in request.GET.keys():
-        cattle = get_object_or_404(Cattle, pk=int(request.GET["cattle_id"]))
-        capture_sessions = cattle.capturesession_set.order_by("time_taken").all()
-    else:
-        capture_sessions = CaptureSession.objects.order_by("time_taken").all()
+    capture_sessions = CaptureSession.objects.order_by("time_taken").all()
 
     context = {
         "cur_path": cur_path,
-        "capture_sessions": capture_sessions,
-        "cattle": cattle
+        "capture_sessions": capture_sessions
     }
 
     return render_to_response("image_app/capture_session_index.html", context,

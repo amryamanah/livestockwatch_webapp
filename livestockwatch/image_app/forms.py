@@ -5,7 +5,7 @@ __author__ = 'amryfitra'
 
 from django import forms
 from multiupload.fields import MultiFileField
-from core_app.models import Cattle
+from cattle_app.models import Cattle
 from .models import ImageAnalysisSession, ImageAnalysisParameter, CaptureSession
 
 

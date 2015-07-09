@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+
+{% block bootstrap3_title %} LiveStockWatch {% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-11 col-md-offset-1">
+      <div class="row">
+        <h1>Cattle Details</h1>
+        <div class="col-md-3">
+          <h3>Basic information</h3>
+          <table class="table table-bordered">
+            <tr>
+              <td>ID number</td>
+              <td>{{ cattle.id_number }}</td>
+            </tr>
+            <tr>
+              <td>Examination number</td>
+              <td>{{ cattle.examination_number }}</td>
+            </tr>
+            <tr>
+              <td>Place</td>
+              <td><a href="{% url "fa_place_detail" cattle.stall.place.id %}">{{ cattle.stall.place.name }}</a></td>
+            </tr>
+            <tr>
+              <td>Stall</td>
+              <td>
+                <a href="{% url "fa_stall_detail" cattle.stall.id %}">{{ cattle.stall.name }}</a>
+              </td>
+            </tr>
+            <tr>
+              <td>Father ID</td>
+              <td>{{ cattle.regist_num_father }}</td>
+            </tr>
+            <tr>
+              <td>Mother ID</td>
+              <td>{{ cattle.regist_num_mother }}</td>
+            </tr>
+            <tr>
+              <td>Sex</td>
+              <td>{{ cattle.get_sex_display }}</td>
+            </tr>
+            <tr>
+              <td>Birthday</td>
+              <td>{{ cattle.birthday }}</td>
+            </tr>
+            <tr>
+              <td>Fat Start Date</td>
+              <td>{{ cattle.fat_start_date }}</td>
+            </tr>
+            <tr>
+              <td>Fat Finish Date</td>
+              <td>{{ cattle.fat_finish_date }}</td>
+            </tr>
+          </table>
+        </div>
+
+{#        <div class="col-md-4">#}
+{#          <a type="button" href="{% url "ia_capture_session_index" %}?cattle_id={{ cattle.id }}"#}
+{#             class="btn btn-info">Capture Session</a>#}
+{#        </div>#}
+
+        <div class="col-md-5">
+
+          <h3>
+            Neckband List
+            <span>
+              <a type="button" class="btn btn-success btn-sm"
+                 href="{% url "ca_cattleneckband_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </a>
+            </span>
+          </h3>
+
+          {% if cattle_neckband_patterns %}
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Pattern</th>
+                  <th>Is active?</th>
+                  <th>Start date</th>
+                  <th>End date</th>
+                </tr>
+              </thead>
+            {% for cattle_neckband in cattle_neckband_patterns %}
+              <tr>
+                <td><a href="{% url "ca_cattle_detail" cattle.id %}">{{ cattle_neckband.neckband_pattern.pattern }}</a></td>
+                <td>{{ cattle_neckband.is_active }}</td>
+                <td>{{ cattle_neckband.start_date }}</td>
+                <td>{{ cattle_neckband.end_date }}</td>
+              </tr>
+            {% endfor %}
+            </table>
+          {% endif %}
+
+        </div>
+
+        <div class="col-md-3"></div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-11">
+
+          <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+            <ul id="myTabs" class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="">
+                <a href="#capturesession" id="capturesession-tab" role="tab" data-toggle="tab"
+                   aria-controls="capturesession" aria-expanded="true">Capture Session</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#blooddata" id="blooddata-tab" role="tab" data-toggle="tab"
+                   aria-controls="blooddata" aria-expanded="true">Blood Data</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#bodydata" role="tab" id="bodydata-tab" data-toggle="tab"
+                   aria-controls="bodydata" aria-expanded="false">Body Data</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#bodytemp" role="tab" id="bodytemp-tab" data-toggle="tab"
+                   aria-controls="bodytemp" aria-expanded="false">Body Temp</a>
+              </li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+              <div role="tabpanel" class="tab-pane fade" id="capturesession" aria-labelledby="capturesession-tab">
+                <h3>
+                  Capture Session
+                  <span>
+                    <a type="button" class="btn btn-success btn-sm"
+                       href="{% url "ia_capture_session_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </a>
+                  </span>
+                </h3>
+                {% if lst_capture_session %}
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Cattle number</th>
+                        <th>Period</th>
+                        <th>Time taken</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for cs in lst_capture_session %}
+                      <tr>
+                        <td>
+                          <a href="{% url "ia_capture_session_details" cs.id %}">{{ cs.name }}</a>
+                        </td>
+                        <td>
+                          <a href="{% url "ca_cattle_detail" cs.cattle.id %}">{{ cs.cattle.id_number }}</a>
+                        </td>
+                        <td>
+                          {{ cs.period }}
+                        </td>
+                        <td>
+                          {{ cs.time_taken }}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                  <p> No capture session available</p>
+                {% endif %}
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="blooddata" aria-labelledby="blooddata-tab">
+
+                <div class="row">
+
+                  <div class="col-md-6">
+                    <h3>
+                      Blood data 1
+                      <span>
+                        <a type="button" class="btn btn-success btn-sm"
+                           href="{% url "ca_blooddata1_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                      </span>
+                    </h3>
+                  {% if lst_blood_data1 %}
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th>Date taken</th>
+                          <th>Vitamin A (IU/dl)</th>
+                          <th>Beta carotene (ug/dl)</th>
+                          <th>Vitamin E (ug/dl)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for blood_data1 in lst_blood_data1 %}
+                          <tr>
+                            <td>{{ blood_data1.date_taken }}</td>
+                            <td>{{ blood_data1.va }}</td>
+                            <td>{{ blood_data1.beta_carotene }}</td>
+                            <td>{{ blood_data1.ve }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  {% else %}
+                    <p> No blood data 1 available</p>
+                  {% endif %}
+                  </div>
+
+                  <div class="col-md-6">
+                    <h3>
+                      Blood data 2
+                      <span>
+                        <a type="button" class="btn btn-success btn-sm"
+                           href="{% url "ca_blooddata2_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                      </span>
+                    </h3>
+                    {% if lst_blood_data2 %}
+                      <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>Date taken</th>
+                            <th>Vitamin C (IU/dl)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for blood_data2 in lst_blood_data2 %}
+                            <tr>
+                              <td>{{ blood_data2.date_taken }}</td>
+                              <td>{{ blood_data2.vc }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    {% else %}
+                      <p> No blood data 2 available</p>
+                    {% endif %}
+                  </div>
+
+                </div>
+
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="bodydata" aria-labelledby="bodydata-tab">
+                <div class="row">
+                  <div class="col-md-5">
+
+                    <h3>
+                      Body data 1
+                      <span>
+                        <a type="button" class="btn btn-success btn-sm"
+                           href="{% url "ca_bodydata1_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                      </span>
+                    </h3>
+                    {% if lst_body_data1 %}
+                      <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>Date taken</th>
+                            <th>Weight (kg)</th>
+                            <th>Withers height (cm)</th>
+                            <th>Chest circumference (cm)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for body_data1 in lst_body_data1 %}
+                            <tr>
+                              <td>{{ body_data1.date_taken }}</td>
+                              <td>{{ body_data1.weight }}</td>
+                              <td>{{ body_data1.withers_height }}</td>
+                              <td>{{ body_data1.chest_circumference }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    {% else %}
+                      <p> No body data 1 available</p>
+                    {% endif %}
+
+                  </div>
+                  <div class="col-md-7">
+                    <h3>
+                      Body data 2
+                      <span>
+                        <a type="button" class="btn btn-success btn-sm"
+                           href="{% url "ca_bodydata2_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                      </span>
+                    </h3>
+                    {% if lst_body_data2 %}
+                      <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>Date taken</th>
+                            <th>Hip height (cm)</th>
+                            <th>Body length (cm)</th>
+                            <th>Chest weight (cm)</th>
+                            <th>Chest width (cm)</th>
+                            <th>Buttocks length (cm)</th>
+                            <th>Hip width (cm)</th>
+                            <th>Thurl width (cm)</th>
+                            <th>Pin bone width (cm)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for body_data2 in lst_body_data2 %}
+                            <tr>
+                              <td>{{ body_data2.date_taken }}</td>
+                              <td>{{ body_data2.hip_height }}</td>
+                              <td>{{ body_data2.body_length }}</td>
+                              <td>{{ body_data2.chest_depth }}</td>
+                              <td>{{ body_data2.chest_width }}</td>
+                              <td>{{ body_data2.buttocks_length }}</td>
+                              <td>{{ body_data2.hip_width }}</td>
+                              <td>{{ body_data2.thurl_width }}</td>
+                              <td>{{ body_data2.pin_bone_width }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    {% else %}
+                      <p> No body data 2 available</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="bodytemp" aria-labelledby="bodytemp-tab">
+                <h3>
+                  Body Temp
+                  <span>
+                    <a type="button" class="btn btn-success btn-sm"
+                       href="{% url "ca_bodytemp_add" %}?cattle_id={{ cattle.id }}&next={{ cur_path }}">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </a>
+                  </span>
+                </h3>
+                {% if lst_bodytemp %}
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Time taken</th>
+                        <th>Temperature</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bodytemp in lst_bodytemp %}
+                        <tr>
+                          <td>{{ bodytemp.time_taken }}</td>
+                          <td>{{ bodytemp.temp }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                  <p> No body temperature available</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+{% endblock %}

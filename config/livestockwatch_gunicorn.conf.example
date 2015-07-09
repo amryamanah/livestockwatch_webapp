@@ -1,0 +1,20 @@
+description "Gunicorn application server running livestockwatch"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setuid user
+setgid www-data
+
+respawn
+
+script
+    export HOME="path_to_managepy" # i.e. where "manage.py" can be found
+    export PATH="$PATH:/path_to/virtualenv/env/bin" # "env" is our virtualenv
+    export PROD_DATABASE_URL="postgresql://user:pass@localhost:5432/db"
+    export SECRET_KEY='somesecret'
+    export DJANGO_SETTINGS_MODULE=livestockwatch.settings.production
+    export LANG="en_US.UTF-8"
+    cd $HOME
+    exec gunicorn -b 127.0.0.1:5000 -w 3 --log-file /var/log/gunicorn/app_name.log wsgi:app
+end script

@@ -1,7 +1,8 @@
 # -- coding: utf-8 --
 
 __author__ = 'amryfitra'
-
+import matplotlib
+matplotlib.use('Agg')
 import os
 import numpy as np
 from matplotlib import pyplot as plt
@@ -9,6 +10,7 @@ from skimage import color, io
 from skimage.segmentation import clear_border
 from skimage.measure import regionprops, label
 import math
+
 
 class PupilAnalysisException(Exception):
     """Base class for Pupil Analysis"""

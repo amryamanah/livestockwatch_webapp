@@ -10,7 +10,7 @@
       <h1>Capture Session</h1>
 
       <p>Name: {{ capture_session.name }}</p>
-      <p>Date Time Taken: {{ capture_session.datetime_taken }}</p>
+      <p>Date Time Taken: {{ capture_session.time_taken|date:'c' }}</p>
       <p>Folder Path: {{ capture_session.folder_path }}</p>
 
       <h3>Image</h3>

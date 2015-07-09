@@ -34,7 +34,7 @@
               <td>{{ cs.name }}</td>
               <td>{{ cs.cattle.id_number }}</td>
               <td>{{ cs.period }}</td>
-              <td>{{ cs.time_taken }}</td>
+              <td>{{ cs.time_taken |date:'c'}}</td>
               <td>
                 <a type="button" class="btn btn-info btn-sm"
                   href="{% url "ia_capture_session_details" cs.id %}">detail</a>

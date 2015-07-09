@@ -50,7 +50,7 @@
               <tr>
                 <td>{{ csr.analysis_parameter.capture_session }}</td>
                 <td>{{ csr.analysis_parameter.capture_session.get_period_display }}</td>
-                <td>{{ csr.analysis_parameter.capture_session.time_taken }}</td>
+                <td>{{ csr.analysis_parameter.capture_session.time_taken|date:'c' }}</td>
                 <td>{{ csr.pupil_max_area }}</td>
               </tr>
             {% endfor %}
@@ -93,80 +93,8 @@
           {% endbuttons %}
         </form>
 
-        <h1>Add or Remove text boxes with jQuery</h1>
-        <input type='button' value='Remove Button' id='removeButton'>
-        <input type='button' value='Get TextBox Value' id='getButtonValue'>
-
-        <form class="form-inline">
-          <div id='ParameterGroup'>
-            <div id="KeyValueDiv1">
-
-              <div class="form-group">
-                <label class="sr-only" for="pkey1">Email address</label>
-                <input type="text" class="form-control" id="pkey1" placeholder="Parameter Key">
-              </div>
-
-              <div class="form-group">
-                <label class="sr-only" for="pvalue1">Password</label>
-                <input type="text" class="form-control" id="pvalue1" placeholder="Parameter Value">
-              </div>
-
-            </div>
-          </div>
-          <input type='button' class="btn btn-sm btn-info" value='Add parameter' id='addButton'>
-          <button type="submit" class="btn btn-default">Sign in</button>
-        </form>
       </div>
     </div>
   </div>
 
-
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-  var counter = 2;
-  $("#addButton").click(function () {
-    if(counter > 10){
-      alert("Only 10 textboxes allow");
-      return false;
-    }
-
-    var newTextBoxDiv = $(document.createElement('div'))
-         .attr("id", 'KeyValueDiv' + counter);
-
-    newTextBoxDiv.after().html(
-      '<div class="form-group">'+
-        '<label class="sr-only" for="pkey'+ counter +'">Email address</label>'+
-        '<input type="text" class="form-control" id="pkey'+ counter +'" placeholder="Parameter Key">'+
-      '</div>'+
-      '<div class="form-group">'+
-        '<label class="sr-only" for="pvalue'+ counter +'">Password</label>'+
-        '<input type="text" class="form-control" id="pvalue'+ counter +'" placeholder="Parameter Value">'+
-      '</div>'
-    );
-
-    newTextBoxDiv.appendTo("#ParameterGroup");
-    counter++;
-  });
-
-  $("#removeButton").click(function () {
-    if(counter==1){
-      alert("No more textbox to remove");
-      return false;
-    }
-    counter--;
-    $("#KeyValueDiv" + counter).remove();
-  });
-
-  $("#getButtonValue").click(function () {
-    var msg = '';
-    for(i=1; i<counter; i++){
-      msg += $('#pkey' + i).val() + ': ' + $('#pvalue' + i).val();
-    }
-    alert(msg);
-  });
-
-});
-</script>
 {% endblock %}
